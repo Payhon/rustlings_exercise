@@ -4,7 +4,7 @@
 // Additionally, upon implementing FromStr, you can use the `parse` method
 // on strings to generate an object of the implementor type.
 // You can read more about it at https://doc.rust-lang.org/std/str/trait.FromStr.html
-use std::num::ParseIntError;
+use std::num::{IntErrorKind, ParseIntError};
 use std::str::FromStr;
 
 #[derive(Debug, PartialEq)]
@@ -26,7 +26,7 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
+
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -41,6 +41,26 @@ enum ParsePersonError {
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len() == 0 {
+           return Err(ParsePersonError::Empty);
+        }
+        let s = s.split(",").collect::<Vec<&str>>();
+        if s.len() != 2 {
+            return Err(ParsePersonError::BadLen);
+        }
+        if s[0].len() == 0 {
+            return Err(ParsePersonError::NoName);
+        }
+        match s[1].to_string().parse::<usize>() {
+            Ok(age) => Ok(Person {
+                name: String::from(s[0]),
+                age
+            }),
+            Err(e) => Err(
+                ParsePersonError::ParseInt(e)
+            )
+        }
+
     }
 }
 

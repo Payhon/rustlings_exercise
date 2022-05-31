@@ -3,15 +3,20 @@
 
 // Execute `rustlings hint generics2` for hints!
 
-// I AM NOT DONE
 
-struct Wrapper {
-    value: u32,
+struct Wrapper<T> {
+    value: T,
 }
 
-impl Wrapper {
+impl Wrapper<u32> {
     pub fn new(value: u32) -> Self {
         Wrapper { value }
+    }
+}
+
+impl Wrapper<&'static str> {
+    pub fn new(value: &'static str) -> Self {
+        Wrapper{ value }
     }
 }
 
@@ -21,11 +26,11 @@ mod tests {
 
     #[test]
     fn store_u32_in_wrapper() {
-        assert_eq!(Wrapper::new(42).value, 42);
+        assert_eq!(Wrapper::<u32>::new(42).value, 42);
     }
 
     #[test]
     fn store_str_in_wrapper() {
-        assert_eq!(Wrapper::new("Foo").value, "Foo");
+        assert_eq!(Wrapper::<&'static str>::new("Foo").value, "Foo");
     }
 }
